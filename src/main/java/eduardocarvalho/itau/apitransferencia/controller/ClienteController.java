@@ -4,6 +4,7 @@ import eduardocarvalho.itau.apitransferencia.dto.Cliente;
 import eduardocarvalho.itau.apitransferencia.dto.Transacao;
 import eduardocarvalho.itau.apitransferencia.service.ClienteService;
 import eduardocarvalho.itau.apitransferencia.service.TransacaoService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clientes")
+@Api(value = "ClienteController", tags = {"Clientes"})
 public class ClienteController {
 
     @Autowired
