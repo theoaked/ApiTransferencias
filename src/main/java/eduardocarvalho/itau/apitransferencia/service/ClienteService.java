@@ -1,15 +1,18 @@
 package eduardocarvalho.itau.apitransferencia.service;
 
 import eduardocarvalho.itau.apitransferencia.dto.Cliente;
-import eduardocarvalho.itau.apitransferencia.dto.Transacao;
 import eduardocarvalho.itau.apitransferencia.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
+
+    ArrayList<Cliente> clientes = new ArrayList<>();
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -18,8 +21,8 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Cliente getClienteById(Long id) {
-        return clienteRepository.findById(id).orElse(null);
+    public Cliente findByConta(int conta) {
+        return clienteRepository.findByConta(conta);
     }
 
     public Cliente createCliente(Cliente cliente) {

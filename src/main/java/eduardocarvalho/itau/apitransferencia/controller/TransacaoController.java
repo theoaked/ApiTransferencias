@@ -2,15 +2,13 @@ package eduardocarvalho.itau.apitransferencia.controller;
 
 import eduardocarvalho.itau.apitransferencia.dto.Transacao;
 import eduardocarvalho.itau.apitransferencia.service.TransacaoService;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transacoes")
-@Api(value = "TransacaoController", tags = {"Transações"})
+@RequestMapping("/v1/transacoes")
 public class TransacaoController {
 
     @Autowired
@@ -27,12 +25,7 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public Transacao createTransacao(@RequestBody Transacao transacao) {
-        return transacaoService.createTransacao(transacao);
-    }
-
-    @PutMapping("/{id}")
-    public Transacao updateTransacao(@PathVariable Long id, @RequestBody Transacao transacaoDetails) {
-        return transacaoService.updateTransacao(id, transacaoDetails);
+    public Transacao createTransacao(int contaOrigem, int contaDestino, double valor) {
+        return transacaoService.createTransacao(contaOrigem, contaDestino, valor);
     }
 }
