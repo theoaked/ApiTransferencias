@@ -19,13 +19,13 @@ public class TransacaoController {
         return transacaoService.getAllTransacoes();
     }
 
-    @GetMapping("/{id}")
-    public Transacao getTransacaoById(@PathVariable Long id) {
-        return transacaoService.getTransacaoById(id);
+    @GetMapping("/{conta}")
+    public List<Transacao> getTransacaoByConta(@PathVariable String conta) {
+        return transacaoService.getAllTransacoesByConta(conta);
     }
 
     @PostMapping
-    public Transacao createTransacao(int contaOrigem, int contaDestino, double valor) {
+    public Transacao createTransacao(String contaOrigem, String contaDestino, Double valor) {
         return transacaoService.createTransacao(contaOrigem, contaDestino, valor);
     }
 }

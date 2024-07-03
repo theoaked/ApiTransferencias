@@ -6,8 +6,10 @@ import eduardocarvalho.itau.apitransferencia.repository.ClienteRepository;
 import eduardocarvalho.itau.apitransferencia.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,18 +25,18 @@ public class TransacaoService {
         return transacaoRepository.findAll();
     }
 
-    public Transacao getTransacaoById(Long id) {
-        return transacaoRepository.findById(id).orElse(null);
-    }
-
-    public Transacao createTransacao(int contaOrigem, int contaDestino, double valor) {
+    //transactional garante que a operação inteira ocorra em uma unica transacao, ou seja, se houver alguma falha no
+    //metodo, toda transaçao é cancelada
+    @Transactional
+    public Transacao createTransacao(String contaOrigem, String contaDestino, double valor) {
         Cliente clienteOrigem = clienteRepository.findByConta(contaOrigem);
         Cliente clienteDestino = clienteRepository.findByConta(contaDestino);
         Transacao transacao = new Transacao();
-        transacao.setDataHoraTransacao(LocalDateTime.now());
         transacao.setContaOrigem(contaOrigem);
         transacao.setContaDestino(contaDestino);
         transacao.setValor(valor);
+
+        // regras associadas a conta
         if (clienteOrigem == null || clienteDestino == null ){
             transacao.setStatus("Falha na Transferencia! - Conta(s) Origem e/ou Destino não existe(m)!");
         } else if (valor > 1000){
@@ -42,23 +44,35 @@ public class TransacaoService {
         } else if (clienteOrigem.getSaldo() < valor){
             transacao.setStatus("Falha na Transferencia! - Saldo Insuficiente!");
         } else {
-            clienteOrigem.setSaldo(clienteOrigem.getSaldo() - valor);
-            clienteDestino.setSaldo(clienteDestino.getSaldo() + valor);
-            transacao.setStatus("Sucesso!");
+            //synchronized faz com qu apenas uma thread possa executar o bloco de codigo por vez
+            synchronized (this) {
+                clienteOrigem.setSaldo(clienteOrigem.getSaldo() - valor);
+                clienteDestino.setSaldo(clienteDestino.getSaldo() + valor);
+                clienteRepository.save(clienteOrigem);
+                clienteRepository.save(clienteDestino);
+                transacao.setStatus("Sucesso!");
+            }
         }
-        return transacaoRepository.save(transacao);
+
+        transacao.setDataHoraTransacao(LocalDateTime.now());
+        transacaoRepository.save(transacao);
+        return transacao;
 
     }
 
-    public Transacao updateTransacao(Long id, Transacao transacaoDetails) {
-        Transacao transacao = transacaoRepository.findById(id).orElse(null);
-        if (transacao != null) {
-            transacao.setContaOrigem(transacaoDetails.getContaOrigem());
-            transacao.setContaDestino(transacaoDetails.getContaDestino());
-            transacao.setValor(transacaoDetails.getValor());
-            transacao.setStatus(transacaoDetails.getStatus());
-            return transacaoRepository.save(transacao);
+    //coletar todas transacoes executadas chaveadas por conta (origem ou destino)
+    public List<Transacao> getAllTransacoesByConta(String conta) {
+        List<Transacao> transacoesTotais = transacaoRepository.findAll();
+        List<Transacao> transacoesByConta = new ArrayList<>();
+        //para cada transacao no banco de dados é feita uma analise se a conta origem ou destino é igual a conta buscada
+        for (Transacao transacao : transacoesTotais) {
+            if (transacao.getContaDestino().equals(conta) || transacao.getContaOrigem().equals(conta)){
+                transacoesByConta.add(transacao);
+            }
         }
-        return null;
+
+        //a lista de transacoes é ordenada de forma decrescente por datahoratransacao
+        Transacao.ordenarPorDataHoraDecrescente(transacoesByConta);
+        return transacoesByConta;
     }
 }

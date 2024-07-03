@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ClienteService {
@@ -21,22 +20,11 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Cliente findByConta(int conta) {
+    public Cliente findByConta(String conta) {
         return clienteRepository.findByConta(conta);
     }
 
     public Cliente createCliente(Cliente cliente) {
         return clienteRepository.save(cliente);
-    }
-
-    public Cliente updateCliente(Long id, Cliente clienteDetails) {
-        Cliente cliente = clienteRepository.findById(id).orElse(null);
-        if (cliente != null) {
-            cliente.setConta(clienteDetails.getConta());
-            cliente.setNome(clienteDetails.getNome());
-            cliente.setSaldo(clienteDetails.getSaldo());
-            return clienteRepository.save(cliente);
-        }
-        return null;
     }
 }

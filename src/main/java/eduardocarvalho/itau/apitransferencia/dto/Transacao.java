@@ -11,28 +11,35 @@ import lombok.NonNull;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Data // Gera getters, setters, toString, equals, e hashCode
-@NoArgsConstructor // Gera um construtor sem argumentos
-@AllArgsConstructor // Gera um construtor com todos os argumentos
+@Data // gera get e set dos parametros
+@NoArgsConstructor // gera um construtor sem argumentos
+@AllArgsConstructor // gera um construtor com argumentos
 public class Transacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Long id;
 
     @NonNull
-    int contaOrigem;
+    String contaOrigem;
 
     @NonNull
-    int contaDestino;
+    String contaDestino;
 
     @NonNull
-    double valor;
+    Double valor;
 
     @NonNull
     String status;
 
+    @NonNull
     @CreationTimestamp
     private LocalDateTime dataHoraTransacao;
+
+    // metodo responsavel por ordenar de forma decrescente as transacoes usando dataHoraTransacao como chave
+    public static void ordenarPorDataHoraDecrescente(List<Transacao> transacoes) {
+        transacoes.sort((t1, t2) -> t2.getDataHoraTransacao().compareTo(t1.getDataHoraTransacao()));
+    }
 }

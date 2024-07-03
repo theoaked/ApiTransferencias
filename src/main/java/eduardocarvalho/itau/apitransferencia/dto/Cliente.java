@@ -1,22 +1,24 @@
 package eduardocarvalho.itau.apitransferencia.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
-@Data // Gera getters, setters, toString, equals, e hashCode
-@NoArgsConstructor // Gera um construtor sem argumentos
-@AllArgsConstructor // Gera um construtor com todos os argumentos
+@Data // gera get e set dos parametros
+@NoArgsConstructor // gera um construtor sem argumentos
+@AllArgsConstructor // gera um construtor com argumentos
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Long id;
+    @NonNull
     String nome;
-    int conta;
-    double saldo;
+    @NonNull
+    @Column(unique = true)
+    String conta;
+    @NonNull
+    Double saldo;
 }

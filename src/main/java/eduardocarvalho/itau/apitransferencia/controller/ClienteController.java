@@ -22,12 +22,12 @@ public class ClienteController {
     }
 
     @GetMapping("/{conta}")
-    public Cliente getClienteByConta(@PathVariable int conta) {
+    public Cliente getClienteByConta(@PathVariable String conta) {
         return clienteService.findByConta(conta);
     }
 
     @PostMapping
-    public Cliente createCliente(int conta, String nome, double saldo) {
+    public Cliente createCliente(String conta, String nome, Double saldo) {
         Cliente cliente = new Cliente();
         cliente.setSaldo(saldo);
         cliente.setNome(nome);
