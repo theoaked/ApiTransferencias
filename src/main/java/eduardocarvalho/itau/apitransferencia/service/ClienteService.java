@@ -5,13 +5,10 @@ import eduardocarvalho.itau.apitransferencia.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ClienteService {
-
-    ArrayList<Cliente> clientes = new ArrayList<>();
 
     @Autowired
     private ClienteRepository clienteRepository;
