@@ -1,4 +1,4 @@
-package eduardocarvalho.itau.apitransferencia;
+package eduardocarvalho.itau.apitransferencia.unit;
 
 import eduardocarvalho.itau.apitransferencia.dto.Cliente;
 import eduardocarvalho.itau.apitransferencia.dto.Transacao;

@@ -1,4 +1,4 @@
-package eduardocarvalho.itau.apitransferencia;
+package eduardocarvalho.itau.apitransferencia.unit;
 
 import eduardocarvalho.itau.apitransferencia.dto.Cliente;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,7 @@ public class ClienteDtoTest {
 
     @BeforeEach
     void setUp() {
+
         cliente = new Cliente(1L, "Alonso", "123", 1000.0);
     }
 
